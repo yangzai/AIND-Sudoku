@@ -44,23 +44,20 @@ def naked_twins(values):
     # Eliminate the naked twins as possibilities for their peers
     for unit in unitlist:
         len_2_list = [s for s in unit if len(values[s]) == 2]
-        len_gt2_list = [s for s in unit if len(values[s]) > 2]
         count = {}
         for s in len_2_list:
             v = values[s]
-            try:
-                count[v] = count[v] + 1
-            except KeyError:
-                count[v] = 1
+            count[v] = count.get(v, 0) + 1
 
         for k, v in count.items():
             if v == 2:
-                for s in len_gt2_list:
-                    new_value = values[s].replace(k[0], '').replace(k[1], '')
-                    if len(new_value) == 1:
-                        assign_value(values, s, new_value)
-                    else:   # reduce visualisation load
-                        values[s] = new_value
+                for s in unit:
+                    if values[s] != k:
+                        new_value = values[s].replace(k[0], '').replace(k[1], '')
+                        if len(new_value) == 1:
+                            assign_value(values, s, new_value)
+                        else:   # reduce visualisation load
+                            values[s] = new_value
     return values
 
 def grid_values(grid):
