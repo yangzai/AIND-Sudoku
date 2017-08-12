@@ -26,7 +26,8 @@ boxes = cross(rows, cols)
 row_units = [cross(r, cols) for r in rows]
 column_units = [cross(rows, c) for c in cols]
 square_units = [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')]
-unitlist = row_units + column_units + square_units
+diagonal_units = [[r + c for r, c in zip(rs, cols)] for rs in (rows, reversed(rows))]   # Question 2
+unitlist = row_units + column_units + square_units + diagonal_units
 units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
 peers = dict((s, set(sum(units[s],[]))-set([s])) for s in boxes)
 
@@ -52,6 +53,15 @@ def naked_twins(values):
             except KeyError:
                 count[v] = 1
 
+        for k, v in count.items():
+            if v == 2:
+                for s in len_gt2_list:
+                    new_value = values[s].replace(k[0], '').replace(k[1], '')
+                    if len(new_value) == 1:
+                        assign_value(values, s, new_value)
+                    else:   # reduce visualisation load
+                        values[s] = new_value
+    return values
 
 def grid_values(grid):
     """
@@ -114,6 +124,7 @@ def reduce_puzzle(values):
         solved_values_before = len([box for box in values.keys() if len(values[box]) == 1])
 
         values = eliminate(values)
+        values = naked_twins(values)    # Question 1
         values = only_choice(values)
 
         solved_values_after = len([box for box in values.keys() if len(values[box]) == 1])
