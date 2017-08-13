@@ -16,6 +16,7 @@ def assign_value(values, box, value):
     return values
 
 def cross(A, B):
+    """Cross product of elements in A and elements in B."""
     return [s + t for s in A for t in B]
 
 rows = 'ABCDEFGHI'
@@ -32,7 +33,8 @@ units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
 peers = dict((s, set(sum(units[s],[]))-set([s])) for s in boxes)
 
 def naked_twins(values):
-    """Eliminate values using the naked twins strategy.
+    """
+    Eliminate values using the naked twins strategy.
     Args:
         values(dict): a dictionary of the form {'box_name': '123456789', ...}
 
@@ -92,6 +94,11 @@ def display(values):
     return
 
 def eliminate(values):
+    """
+    Go through all the boxes, and whenever there is a box with a value, eliminate this value from the values of all its peers.
+    Input: A sudoku in dictionary form.
+    Output: The resulting sudoku in dictionary form.
+    """
     solved_boxes = [k for k in values.keys() if len(values[k]) == 1]
     for box in solved_boxes:
         value = values[box]
@@ -106,6 +113,11 @@ def eliminate(values):
     return values
 
 def only_choice(values):
+    """
+    Go through all the units, and whenever there is a unit with a value that only fits in one box, assign the value to this box.
+    Input: A sudoku in dictionary form.
+    Output: The resulting sudoku in dictionary form.
+    """
     for unit in unitlist:
         for i in range(1, 10):
             str_i = str(i)
@@ -116,6 +128,13 @@ def only_choice(values):
     return values
 
 def reduce_puzzle(values):
+    """
+    Iterate eliminate() and only_choice(). If at some point, there is a box with no available values, return False.
+    If the sudoku is solved, return the sudoku.
+    If after an iteration of both functions, the sudoku remains the same, return the sudoku.
+    Input: A sudoku in dictionary form.
+    Output: The resulting sudoku in dictionary form.
+    """
     stalled = False
     while not stalled:
         solved_values_before = len([box for box in values.keys() if len(values[box]) == 1])
@@ -132,6 +151,7 @@ def reduce_puzzle(values):
     return values
 
 def search(values):
+    """Using depth-first search and propagation, create a search tree and solve the sudoku."""
     values = reduce_puzzle(values)
     if values is False:
         return False
