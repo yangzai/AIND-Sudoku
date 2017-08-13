@@ -3,12 +3,18 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?  
-A: For each unit, find pairs of boxes with with the same values of length 2.
-Propagate the constraint by removing the values from all other boxes within the unit.
+A: Each pair of naked twins in a unit has no other possible values other than the pair of values that made them twins,
+and the implication of this can be propagated by excluding the values from the rest of the boxes in the unit, effectively narrowing their possible values.
+For each unit, find pairs of boxes with with the same values of length 2.
+Propagate the constraint by removing the values of each pair from all other boxes within the unit.
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A: Add 2 more unit constraints for the 2 possible diagonals in a puzzle.
+A: Similar to existing row, column and square units, each diagonals consist of 9 squares
+with the constraint of having each of the numbers 1 to 9 to appear exactly once.
+We can do this by adding 2 more unit constraints for the 2 possible diagonals in a puzzle.
+With the consideration of all units including the 2 new ones,
+we can then perform constraint propagation by apply existing strategies to reduce the possible values of each box iteratively.
 
 ### Install
 
